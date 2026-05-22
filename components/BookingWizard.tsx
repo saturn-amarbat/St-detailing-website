@@ -17,6 +17,7 @@ import {
   type BookingFormValues,
   type PackageId
 } from "@/lib/booking";
+import { businessEmail, messengerUrl } from "@/lib/contact";
 
 const formName = "booking-wizard";
 
@@ -219,7 +220,7 @@ export function BookingWizard() {
       setStep(0);
     } catch {
       setStatus("error");
-      setSubmitError("Something went wrong while submitting your request. Please email info.stdetailingchicago@gmail.com.");
+      setSubmitError("Something went wrong while submitting your request.");
     }
   };
 
@@ -489,7 +490,23 @@ export function BookingWizard() {
 
           {status === "error" ? (
             <div className="mt-6 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-sm font-semibold text-red-200">
-              {submitError}
+              <p>{submitError}</p>
+              <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+                <a
+                  href={messengerUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-10 items-center justify-center rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 px-4 font-black text-white"
+                >
+                  Message us on Messenger
+                </a>
+                <a
+                  href={`mailto:${businessEmail}`}
+                  className="inline-flex min-h-10 items-center justify-center rounded-xl border border-red-300/30 px-4 font-black text-red-100"
+                >
+                  Email instead
+                </a>
+              </div>
             </div>
           ) : null}
 

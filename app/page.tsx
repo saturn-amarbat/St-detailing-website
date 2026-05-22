@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Award, CalendarCheck, CheckCircle2, ExternalLink, Mail, MapPin, MessageCircle, ShieldCheck, Sparkles, Wrench } from "lucide-react";
 import { BookingWizard } from "@/components/BookingWizard";
 import { PricingCard } from "@/components/PricingCard";
+import { businessEmail, facebookPageUrl, messengerUrl } from "@/lib/contact";
 import { packages } from "@/lib/booking";
 
 const serviceAreas = [
@@ -33,8 +34,6 @@ const hiddenFormFields = [
   "preferredTime",
   "payload"
 ];
-
-const facebookPageUrl = "https://www.facebook.com/profile.php?id=61590367313594";
 
 const detailPhotos = [
   {
@@ -151,10 +150,13 @@ export default function Home() {
                     Get a Free Quote
                   </a>
                   <a
-                    href="#pricing"
+                    href={messengerUrl}
+                    target="_blank"
+                    rel="noreferrer"
                     className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-6 text-base font-black text-white shadow-glass transition hover:border-cyan-300/45 hover:bg-white/[0.1]"
                   >
-                    View Pricing
+                    <MessageCircle className="h-5 w-5 text-cyan-300" aria-hidden="true" />
+                    Message Us
                   </a>
                 </div>
                 <div className="mt-10 grid max-w-3xl gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 shadow-glass backdrop-blur sm:grid-cols-3">
@@ -345,7 +347,7 @@ export default function Home() {
                   ],
                   [
                     "Can I email for a custom quote?",
-                    "Yes. You can reach ST Chicagoland Mobile Detailing at info.stdetailingchicago@gmail.com for custom requests, fleet work, or unique vehicle conditions."
+                    `Yes. You can reach ST Chicagoland Mobile Detailing at ${businessEmail} or message the business directly on Messenger for custom requests, fleet work, or unique vehicle conditions.`
                   ]
                 ].map(([question, answer]) => (
                   <details key={question} className="group rounded-xl border border-white/10 bg-white/[0.04] p-5 shadow-glass" open>
@@ -371,20 +373,30 @@ export default function Home() {
                 </h2>
                 <div className="mt-5 flex flex-wrap items-center gap-3 text-zinc-300">
                   <Mail className="h-5 w-5 text-cyan-300" aria-hidden="true" />
-                  <a href="mailto:info.stdetailingchicago@gmail.com" className="break-all font-bold text-cyan-300 transition hover:text-white">
-                    info.stdetailingchicago@gmail.com
+                  <a href={`mailto:${businessEmail}`} className="break-all font-bold text-cyan-300 transition hover:text-white">
+                    {businessEmail}
                   </a>
                 </div>
-                <a
-                  href={facebookPageUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 font-black text-white transition hover:border-cyan-300/45 hover:bg-white/[0.08]"
-                >
-                  <MessageCircle className="h-5 w-5 text-cyan-300" aria-hidden="true" />
-                  Facebook Page
-                  <ExternalLink className="h-4 w-4 text-zinc-400" aria-hidden="true" />
-                </a>
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <a
+                    href={messengerUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 px-4 font-black text-white shadow-glass transition hover:from-cyan-500 hover:to-blue-500"
+                  >
+                    <MessageCircle className="h-5 w-5" aria-hidden="true" />
+                    Message on Messenger
+                  </a>
+                  <a
+                    href={facebookPageUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 font-black text-white transition hover:border-cyan-300/45 hover:bg-white/[0.08]"
+                  >
+                    Facebook Page
+                    <ExternalLink className="h-4 w-4 text-zinc-400" aria-hidden="true" />
+                  </a>
+                </div>
               </div>
               <a
                 href="#quote"
@@ -396,8 +408,8 @@ export default function Home() {
             </div>
             <div className="mt-8 grid gap-3 border-t border-white/10 pt-6 text-sm text-zinc-500 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
               <p>&copy; 2026 ST Chicagoland Mobile Detailing. All rights reserved.</p>
-              <a href="mailto:info.stdetailingchicago@gmail.com" className="break-all transition hover:text-cyan-300">
-                info.stdetailingchicago@gmail.com
+              <a href={`mailto:${businessEmail}`} className="break-all transition hover:text-cyan-300">
+                {businessEmail}
               </a>
             </div>
           </section>
