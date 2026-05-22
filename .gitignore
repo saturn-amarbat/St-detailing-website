@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+
+# production/export artifacts
+deploy/
+
+# local logs
+*.log
+
+# legacy generated/static scratch files
+index.html
+assets/
+tmp/
+
+# environment
+.env
+.env*.local
+
+# system
+.DS_Store
+Thumbs.db
