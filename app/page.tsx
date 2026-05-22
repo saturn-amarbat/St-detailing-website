@@ -212,11 +212,11 @@ export default function Home() {
                 <div>
                   <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">Visual standard</p>
                   <h2 className="mt-4 max-w-2xl text-4xl font-black tracking-tight text-white sm:text-5xl">
-                    A real-world detailing look, not a generic car wash template.
+                    Proof in the foam, finish, and final walkaround.
                   </h2>
                 </div>
                 <p className="max-w-md text-zinc-300">
-                  The page now uses darker, detail-focused vehicle photography to match the premium mobile service positioning.
+                  Clean paint, crisp glass, dressed tires, and a sharper cabin all start with a focused mobile setup built for driveway service.
                 </p>
               </div>
 
