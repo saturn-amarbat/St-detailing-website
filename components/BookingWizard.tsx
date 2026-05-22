@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ArrowRight, CalendarClock, Car, Check, Loader2, ShieldCheck, Sparkles } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import {
   addons,
@@ -30,6 +30,21 @@ const stepFields: Record<number, (keyof BookingFormValues)[]> = {
 
 const packageHashMap = new Map(packages.map((servicePackage) => [`#quote-${servicePackage.id}`, servicePackage.id]));
 
+function getDefaultValues(selectedPackage: PackageId = "resale-restoration"): BookingFormValues {
+  return {
+    vehicleSize: "sedan-coupe",
+    selectedPackage,
+    addons: [],
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    preferredDate: "",
+    preferredTime: "",
+    calculatedTotal: calculateTotal("sedan-coupe", selectedPackage, [])
+  };
+}
+
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
@@ -54,22 +69,13 @@ export function BookingWizard() {
     setValue,
     trigger,
     reset,
-    formState: { errors }
+    clearErrors,
+    formState: { errors, touchedFields, submitCount }
   } = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     mode: "onTouched",
-    defaultValues: {
-      vehicleSize: "sedan-coupe",
-      selectedPackage: "resale-restoration",
-      addons: [],
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      preferredDate: "",
-      preferredTime: "",
-      calculatedTotal: 349
-    }
+    reValidateMode: "onBlur",
+    defaultValues: getDefaultValues()
   });
 
   const vehicleSize = useWatch({ control, name: "vehicleSize" });
@@ -96,23 +102,63 @@ export function BookingWizard() {
     setValue("calculatedTotal", total, { shouldValidate: true });
   }, [setValue, total]);
 
+  const resetWizard = useCallback((packageId: PackageId = "resale-restoration") => {
+    reset(getDefaultValues(packageId));
+    clearErrors();
+    setStatus("idle");
+    setSubmitError("");
+    setStep(0);
+  }, [clearErrors, reset]);
+
+  const scrollToWizard = useCallback(() => {
+    window.requestAnimationFrame(() => {
+      document.getElementById("quote")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, []);
+
+  const openWizard = useCallback((packageId?: PackageId) => {
+    resetWizard(packageId);
+    scrollToWizard();
+  }, [resetWizard, scrollToWizard]);
+
   useEffect(() => {
     const syncPackageFromHash = () => {
       const packageId = packageHashMap.get(window.location.hash) as PackageId | undefined;
-      if (!packageId) return;
+      if (packageId) {
+        openWizard(packageId);
+      }
+    };
 
-      setValue("selectedPackage", packageId, { shouldDirty: true, shouldValidate: true });
-      setStep(0);
+    const handleQuoteClick = (event: globalThis.MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      const anchor = target?.closest<HTMLAnchorElement>('a[href^="#quote"]');
+      if (!anchor) return;
 
-      window.requestAnimationFrame(() => {
-        document.getElementById("quote")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
+      const href = anchor.getAttribute("href");
+      if (!href) return;
+
+      const packageId = packageHashMap.get(href) as PackageId | undefined;
+      event.preventDefault();
+
+      if (window.location.hash !== href) {
+        window.history.pushState(null, "", href);
+      }
+
+      openWizard(packageId);
     };
 
     syncPackageFromHash();
+    document.addEventListener("click", handleQuoteClick);
     window.addEventListener("hashchange", syncPackageFromHash);
-    return () => window.removeEventListener("hashchange", syncPackageFromHash);
-  }, [setValue]);
+    return () => {
+      document.removeEventListener("click", handleQuoteClick);
+      window.removeEventListener("hashchange", syncPackageFromHash);
+    };
+  }, [openWizard]);
+
+  const showFieldError = (field: keyof BookingFormValues) => {
+    return Boolean(errors[field] && (touchedFields[field] || submitCount > 0));
+  };
 
   const setVehicleSize = (value: BookingFormValues["vehicleSize"]) => {
     setValue("vehicleSize", value, { shouldDirty: true, shouldValidate: true });
@@ -205,18 +251,7 @@ export function BookingWizard() {
       }
 
       setStatus("success");
-      reset({
-        vehicleSize: "sedan-coupe",
-        selectedPackage: "resale-restoration",
-        addons: [],
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        preferredDate: "",
-        preferredTime: "",
-        calculatedTotal: 349
-      });
+      reset(getDefaultValues());
       setStep(0);
     } catch {
       setStatus("error");
@@ -295,7 +330,7 @@ export function BookingWizard() {
                       className={cx(
                         "rounded-xl border p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-offset-2 focus:ring-offset-slate-950",
                         active
-                          ? "border-cyan-300/60 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 shadow-glow"
+                          ? "border-cyan-300/60 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 shadow-glow ring-2 ring-cyan-300/60"
                           : "border-white/10 bg-white/[0.04] hover:border-cyan-300/35 hover:bg-white/[0.07]"
                       )}
                     >
@@ -331,8 +366,13 @@ export function BookingWizard() {
                     >
                       <span>
                         {option.featured ? (
-                          <span className="mb-3 inline-flex rounded-full bg-cyan-900/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-cyan-400">
+                          <span className="mb-3 mr-2 inline-flex rounded-full bg-cyan-900/30 px-3 py-1 text-xs font-bold uppercase tracking-wider text-cyan-400">
                             Best Seller
+                          </span>
+                        ) : null}
+                        {active ? (
+                          <span className="mb-3 inline-flex rounded-full bg-blue-500/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-200">
+                            Selected
                           </span>
                         ) : null}
                         <span className="block text-2xl font-black text-white">{option.name}</span>
@@ -403,7 +443,7 @@ export function BookingWizard() {
                       className="min-h-12 rounded-xl border border-white/10 bg-slate-950/70 px-4 text-white outline-none transition placeholder:text-zinc-500 focus:border-cyan-300"
                       autoComplete="given-name"
                     />
-                    {errors.firstName ? <span className="text-sm text-red-300">{errors.firstName.message}</span> : null}
+                    {showFieldError("firstName") ? <span className="text-sm text-red-300">{errors.firstName?.message}</span> : null}
                   </label>
                   <label className="grid gap-2">
                     <span className="text-sm font-bold text-zinc-200">Last name</span>
@@ -412,7 +452,7 @@ export function BookingWizard() {
                       className="min-h-12 rounded-xl border border-white/10 bg-slate-950/70 px-4 text-white outline-none transition placeholder:text-zinc-500 focus:border-cyan-300"
                       autoComplete="family-name"
                     />
-                    {errors.lastName ? <span className="text-sm text-red-300">{errors.lastName.message}</span> : null}
+                    {showFieldError("lastName") ? <span className="text-sm text-red-300">{errors.lastName?.message}</span> : null}
                   </label>
                   <label className="grid gap-2">
                     <span className="text-sm font-bold text-zinc-200">Email</span>
@@ -422,7 +462,7 @@ export function BookingWizard() {
                       className="min-h-12 rounded-xl border border-white/10 bg-slate-950/70 px-4 text-white outline-none transition placeholder:text-zinc-500 focus:border-cyan-300"
                       autoComplete="email"
                     />
-                    {errors.email ? <span className="text-sm text-red-300">{errors.email.message}</span> : null}
+                    {showFieldError("email") ? <span className="text-sm text-red-300">{errors.email?.message}</span> : null}
                   </label>
                   <label className="grid gap-2">
                     <span className="text-sm font-bold text-zinc-200">Phone</span>
@@ -432,7 +472,7 @@ export function BookingWizard() {
                       className="min-h-12 rounded-xl border border-white/10 bg-slate-950/70 px-4 text-white outline-none transition placeholder:text-zinc-500 focus:border-cyan-300"
                       autoComplete="tel"
                     />
-                    {errors.phone ? <span className="text-sm text-red-300">{errors.phone.message}</span> : null}
+                    {showFieldError("phone") ? <span className="text-sm text-red-300">{errors.phone?.message}</span> : null}
                   </label>
                   <label className="grid gap-2">
                     <span className="text-sm font-bold text-zinc-200">Preferred date</span>
@@ -441,7 +481,7 @@ export function BookingWizard() {
                       type="date"
                       className="min-h-12 rounded-xl border border-white/10 bg-slate-950/70 px-4 text-white outline-none transition focus:border-cyan-300"
                     />
-                    {errors.preferredDate ? <span className="text-sm text-red-300">{errors.preferredDate.message}</span> : null}
+                    {showFieldError("preferredDate") ? <span className="text-sm text-red-300">{errors.preferredDate?.message}</span> : null}
                   </label>
                   <label className="grid gap-2">
                     <span className="text-sm font-bold text-zinc-200">Preferred time</span>
@@ -450,7 +490,7 @@ export function BookingWizard() {
                       type="time"
                       className="min-h-12 rounded-xl border border-white/10 bg-slate-950/70 px-4 text-white outline-none transition focus:border-cyan-300"
                     />
-                    {errors.preferredTime ? <span className="text-sm text-red-300">{errors.preferredTime.message}</span> : null}
+                    {showFieldError("preferredTime") ? <span className="text-sm text-red-300">{errors.preferredTime?.message}</span> : null}
                   </label>
                 </div>
 

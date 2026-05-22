@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { Award, CalendarCheck, CheckCircle2, ExternalLink, Mail, MapPin, MessageCircle, ShieldCheck, Sparkles, Wrench } from "lucide-react";
+import { Award, CalendarCheck, ExternalLink, Mail, MapPin, MessageCircle, ShieldCheck, Sparkles, Wrench } from "lucide-react";
 import { BookingWizard } from "@/components/BookingWizard";
+import { FAQAccordion } from "@/components/FAQAccordion";
 import { PricingCard } from "@/components/PricingCard";
 import { businessEmail, facebookPageUrl, messengerUrl } from "@/lib/contact";
 import { packages } from "@/lib/booking";
@@ -44,12 +45,34 @@ const detailPhotos = [
   {
     src: "/detailing-driveway-foam.jpg",
     title: "Driveway-ready setup",
-    copy: "Mobile service built around the customer’s home or workplace, with water and outlet access confirmed upfront."
+    copy: "Mobile service built around the customer's home or workplace, with water and outlet access confirmed upfront."
   },
   {
     src: "/detailing-red-spray.jpg",
     title: "High-pressure rinse",
     copy: "A sharper visual standard for maintenance washes, deep cleans, and resale presentation."
+  }
+];
+
+const faqItems = [
+  {
+    question: "Do you need water and electricity?",
+    answer:
+      "Yes. Please confirm access to an outdoor water spigot and a standard 110V power outlet before booking. These requirements help us deliver a professional mobile setup without delays."
+  },
+  {
+    question: "What happens if the weather changes?",
+    answer:
+      "If rain, snow, extreme cold, or unsafe wind affects service quality or safety, we will contact you to reschedule for the next practical opening."
+  },
+  {
+    question: "Are prices final?",
+    answer:
+      "The booking wizard provides an accurate starting estimate. Final quotes may change for oversized vehicles, pet hair, heavy staining, excessive debris, odor issues, or paint condition."
+  },
+  {
+    question: "Can I email for a custom quote?",
+    answer: `Yes. You can reach ST Chicagoland Mobile Detailing at ${businessEmail} or message the business directly on Messenger for custom requests, fleet work, or unique vehicle conditions.`
   }
 ];
 
@@ -157,6 +180,7 @@ export default function Home() {
                   >
                     <MessageCircle className="h-5 w-5 text-cyan-300" aria-hidden="true" />
                     Message Us
+                    <ExternalLink className="h-4 w-4 text-zinc-400" aria-hidden="true" />
                   </a>
                 </div>
                 <div className="mt-10 grid max-w-3xl gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 shadow-glass backdrop-blur sm:grid-cols-3">
@@ -331,34 +355,7 @@ export default function Home() {
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
               <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">Requirements & FAQ</p>
               <h2 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">What to know before booking.</h2>
-              <div className="mt-8 space-y-3">
-                {[
-                  [
-                    "Do you need water and electricity?",
-                    "Yes. Please confirm access to an outdoor water spigot and a standard 110V power outlet before booking. These requirements help us deliver a professional mobile setup without delays."
-                  ],
-                  [
-                    "What happens if the weather changes?",
-                    "If rain, snow, extreme cold, or unsafe wind affects service quality or safety, we will contact you to reschedule for the next practical opening."
-                  ],
-                  [
-                    "Are prices final?",
-                    "The booking wizard provides an accurate starting estimate. Final quotes may change for oversized vehicles, pet hair, heavy staining, excessive debris, odor issues, or paint condition."
-                  ],
-                  [
-                    "Can I email for a custom quote?",
-                    `Yes. You can reach ST Chicagoland Mobile Detailing at ${businessEmail} or message the business directly on Messenger for custom requests, fleet work, or unique vehicle conditions.`
-                  ]
-                ].map(([question, answer]) => (
-                  <details key={question} className="group rounded-xl border border-white/10 bg-white/[0.04] p-5 shadow-glass" open>
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-black text-white">
-                      {question}
-                      <CheckCircle2 className="h-5 w-5 shrink-0 text-cyan-300" aria-hidden="true" />
-                    </summary>
-                    <p className="mt-3 text-zinc-300">{answer}</p>
-                  </details>
-                ))}
-              </div>
+              <FAQAccordion items={faqItems} />
             </div>
           </section>
         </main>
