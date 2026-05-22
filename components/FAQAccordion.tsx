@@ -19,7 +19,12 @@ export function FAQAccordion({ items }: FAQAccordionProps) {
         const isOpen = openIndex === index;
 
         return (
-          <article key={item.question} className="rounded-xl border border-white/10 bg-white/[0.04] p-5 shadow-glass">
+          <article
+            key={item.question}
+            className="rounded-xl border border-white/10 bg-white/[0.04] p-5 shadow-glass"
+            data-reveal="scale"
+            data-reveal-delay={String(index % 4)}
+          >
             <button
               type="button"
               aria-expanded={isOpen}

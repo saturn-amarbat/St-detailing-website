@@ -3,6 +3,7 @@ import { Award, CalendarCheck, ExternalLink, Mail, MapPin, MessageCircle, Shield
 import { BookingWizard } from "@/components/BookingWizard";
 import { FAQAccordion } from "@/components/FAQAccordion";
 import { PricingCard } from "@/components/PricingCard";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { businessEmail, facebookPageUrl, messengerUrl } from "@/lib/contact";
 import { packages } from "@/lib/booking";
 
@@ -91,6 +92,7 @@ export default function Home() {
           <input key={field} type="hidden" name={field} />
         ))}
       </form>
+      <ScrollReveal />
 
       <div className="min-h-screen bg-slate-950 text-white">
         <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/88 backdrop-blur-xl">
@@ -153,7 +155,7 @@ export default function Home() {
             />
             <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,6,23,0.98)_0%,rgba(2,6,23,0.82)_45%,rgba(2,6,23,0.64)_100%)]" />
             <div className="mx-auto flex min-h-[calc(94svh-8rem)] max-w-7xl items-center px-4 py-16 sm:px-6 lg:px-8">
-              <div className="max-w-4xl">
+              <div className="max-w-4xl" data-reveal="fade">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.22em] text-cyan-100 backdrop-blur">
                   <MapPin className="h-4 w-4" aria-hidden="true" />
                   Downtown Chicago & nearby suburbs
@@ -203,7 +205,9 @@ export default function Home() {
 
           <section id="services" className="border-y border-white/10 bg-slate-900 py-16 sm:py-20">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">Why mobile detailing</p>
+              <div data-reveal>
+                <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">Why mobile detailing</p>
+              </div>
               <div className="mt-8 grid gap-4 md:grid-cols-3">
                 {[
                   {
@@ -221,8 +225,13 @@ export default function Home() {
                     title: "Satisfied Results",
                     copy: "Every appointment ends with a final walkaround so the result is clear before payment."
                   }
-                ].map((item) => (
-                  <article key={item.title} className="rounded-xl border border-white/10 bg-white/[0.04] p-6 shadow-glass">
+                ].map((item, index) => (
+                  <article
+                    key={item.title}
+                    className="rounded-xl border border-white/10 bg-white/[0.04] p-6 shadow-glass"
+                    data-reveal="scale"
+                    data-reveal-delay={String(index)}
+                  >
                     <item.icon className="h-9 w-9 text-cyan-300" aria-hidden="true" />
                     <h2 className="mt-6 text-2xl font-black text-white">{item.title}</h2>
                     <p className="mt-3 text-zinc-300">{item.copy}</p>
@@ -234,7 +243,7 @@ export default function Home() {
 
           <section className="bg-slate-950 py-16 sm:py-24">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+              <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end" data-reveal>
                 <div>
                   <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">Visual standard</p>
                   <h2 className="mt-4 max-w-2xl text-4xl font-black tracking-tight text-white sm:text-5xl">
@@ -247,8 +256,13 @@ export default function Home() {
               </div>
 
               <div className="mt-10 grid gap-5 md:grid-cols-3">
-                {detailPhotos.map((photo) => (
-                  <article key={photo.title} className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] shadow-glass">
+                {detailPhotos.map((photo, index) => (
+                  <article
+                    key={photo.title}
+                    className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] shadow-glass"
+                    data-reveal="scale"
+                    data-reveal-delay={String(index)}
+                  >
                     <div className="relative aspect-[4/3]">
                       <Image src={photo.src} alt="" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover" />
                     </div>
@@ -264,7 +278,7 @@ export default function Home() {
 
           <section id="pricing" className="bg-slate-950 py-16 sm:py-24">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+              <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end" data-reveal>
                 <div>
                   <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">Packages</p>
                   <h2 className="mt-4 max-w-2xl text-4xl font-black tracking-tight text-white sm:text-5xl">
@@ -282,7 +296,7 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="mt-12 grid gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-glass md:grid-cols-2">
+              <div className="mt-12 grid gap-4 rounded-2xl border border-white/10 bg-white/[0.04] p-5 shadow-glass md:grid-cols-2" data-reveal>
                 <article className="flex gap-4 rounded-xl border border-white/10 bg-slate-950/55 p-4">
                   <Image src="/requirement-water.png" alt="" width={96} height={96} className="h-20 w-20 shrink-0 object-contain sm:h-24 sm:w-24" />
                   <div>
@@ -309,14 +323,19 @@ export default function Home() {
 
           <section className="border-y border-white/10 bg-slate-900 py-16 sm:py-24">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">How it works</p>
+              <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300" data-reveal>How it works</p>
               <div className="mt-8 grid gap-4 md:grid-cols-3">
                 {[
                   ["1", "Pick Your Package", "Choose a package, vehicle size, add-ons, and preferred appointment window."],
                   ["2", "We Drive to You", "A focused two-person mobile team arrives prepared and works efficiently at your home or office."],
                   ["3", "Inspect & Pay", "Review the vehicle with us, confirm the result, and pay after the final walkaround."]
-                ].map(([number, title, copy]) => (
-                  <article key={title} className="rounded-xl border border-white/10 bg-white/[0.04] p-6 shadow-glass">
+                ].map(([number, title, copy], index) => (
+                  <article
+                    key={title}
+                    className="rounded-xl border border-white/10 bg-white/[0.04] p-6 shadow-glass"
+                    data-reveal="scale"
+                    data-reveal-delay={String(index)}
+                  >
                     <span className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-lg font-black text-white">
                       {number}
                     </span>
@@ -331,7 +350,7 @@ export default function Home() {
           <section className="bg-slate-950 py-16 sm:py-24">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-                <div>
+                <div data-reveal>
                   <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">Service areas</p>
                   <h2 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
                     Downtown Chicago and nearby suburbs.
@@ -341,8 +360,13 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  {serviceAreas.map((area) => (
-                    <div key={area} className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-black text-zinc-100 shadow-glass">
+                  {serviceAreas.map((area, index) => (
+                    <div
+                      key={area}
+                      className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-black text-zinc-100 shadow-glass"
+                      data-reveal="scale"
+                      data-reveal-delay={String(index % 4)}
+                    >
                       {area}
                     </div>
                   ))}
@@ -353,8 +377,10 @@ export default function Home() {
 
           <section id="faq" className="bg-slate-900 py-16 sm:py-24">
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-              <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">Requirements & FAQ</p>
-              <h2 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">What to know before booking.</h2>
+              <div data-reveal>
+                <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">Requirements & FAQ</p>
+                <h2 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">What to know before booking.</h2>
+              </div>
               <FAQAccordion items={faqItems} />
             </div>
           </section>
@@ -362,7 +388,7 @@ export default function Home() {
 
         <footer className="border-t border-white/10 bg-slate-950">
           <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+            <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center" data-reveal>
               <div>
                 <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">Ready when your driveway is</p>
                 <h2 className="mt-4 max-w-2xl text-4xl font-black tracking-tight text-white">

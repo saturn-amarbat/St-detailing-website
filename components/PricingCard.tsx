@@ -23,6 +23,7 @@ export function PricingCard({
 }: PricingCardProps) {
   return (
     <article
+      data-reveal="scale"
       className={[
         "flex h-full flex-col rounded-xl border bg-white/[0.04] p-6 shadow-glass transition duration-300",
         featured ? "border-cyan-300/50 shadow-glow" : "border-white/10 hover:border-cyan-300/35 hover:bg-white/[0.06]"

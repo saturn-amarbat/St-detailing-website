@@ -263,7 +263,7 @@ export function BookingWizard() {
     <section id="quote" className="relative overflow-hidden bg-slate-950 py-16 sm:py-24">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(8,145,178,0.22),transparent_34%),radial-gradient(circle_at_85%_20%,rgba(37,99,235,0.2),transparent_30%)]" />
       <div className="relative mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:px-8">
-        <div className="lg:sticky lg:top-28 lg:self-start">
+        <div className="lg:sticky lg:top-28 lg:self-start" data-reveal>
           <span className="inline-flex rounded-full border border-cyan-300/25 bg-cyan-300/10 px-3 py-1 text-xs font-black uppercase tracking-[0.22em] text-cyan-200">
             Get a free quote
           </span>
@@ -292,6 +292,7 @@ export function BookingWizard() {
           netlify-honeypot="bot-field"
           onSubmit={handleSubmit(onSubmit)}
           className="rounded-2xl border border-white/10 bg-white/[0.045] p-4 shadow-glass backdrop-blur sm:p-6"
+          data-reveal="scale"
         >
           <input type="hidden" name="form-name" value={formName} />
           <p className="hidden">
