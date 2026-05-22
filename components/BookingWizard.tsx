@@ -14,7 +14,8 @@ import {
   packages,
   vehicleSizes,
   type AddonId,
-  type BookingFormValues
+  type BookingFormValues,
+  type PackageId
 } from "@/lib/booking";
 
 const formName = "booking-wizard";
@@ -25,6 +26,8 @@ const stepFields: Record<number, (keyof BookingFormValues)[]> = {
   2: ["addons"],
   3: ["firstName", "lastName", "email", "phone", "preferredDate", "preferredTime", "calculatedTotal"]
 };
+
+const packageHashMap = new Map(packages.map((servicePackage) => [`#quote-${servicePackage.id}`, servicePackage.id]));
 
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -91,6 +94,24 @@ export function BookingWizard() {
   useEffect(() => {
     setValue("calculatedTotal", total, { shouldValidate: true });
   }, [setValue, total]);
+
+  useEffect(() => {
+    const syncPackageFromHash = () => {
+      const packageId = packageHashMap.get(window.location.hash) as PackageId | undefined;
+      if (!packageId) return;
+
+      setValue("selectedPackage", packageId, { shouldDirty: true, shouldValidate: true });
+      setStep(0);
+
+      window.requestAnimationFrame(() => {
+        document.getElementById("quote")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    };
+
+    syncPackageFromHash();
+    window.addEventListener("hashchange", syncPackageFromHash);
+    return () => window.removeEventListener("hashchange", syncPackageFromHash);
+  }, [setValue]);
 
   const setVehicleSize = (value: BookingFormValues["vehicleSize"]) => {
     setValue("vehicleSize", value, { shouldDirty: true, shouldValidate: true });
@@ -246,6 +267,7 @@ export function BookingWizard() {
             <div className="rounded-xl border border-white/10 bg-slate-950/80 px-4 py-3 text-right">
               <p className="text-xs font-bold uppercase tracking-wider text-zinc-400">Current estimate</p>
               <p className="text-3xl font-black text-cyan-300">{currency(total)}</p>
+              <p className="mt-1 text-xs font-bold text-zinc-400">{servicePackage.name}</p>
             </div>
           </div>
 

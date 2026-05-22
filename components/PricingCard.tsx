@@ -1,7 +1,9 @@
 import { Check, Sparkles } from "lucide-react";
 import Image from "next/image";
+import type { PackageId } from "@/lib/booking";
 
 type PricingCardProps = {
+  id: PackageId;
   name: string;
   description: string;
   basePrice: number;
@@ -11,6 +13,7 @@ type PricingCardProps = {
 };
 
 export function PricingCard({
+  id,
   name,
   description,
   basePrice,
@@ -55,7 +58,7 @@ export function PricingCard({
       </ul>
 
       <a
-        href="#quote"
+        href={`#quote-${id}`}
         className={[
           "mt-auto inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-4 text-base font-black transition focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-offset-2 focus:ring-offset-slate-950",
           featured
