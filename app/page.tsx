@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Award, CalendarCheck, CheckCircle2, Mail, MapPin, ShieldCheck, Sparkles, Wrench } from "lucide-react";
+import { Award, CalendarCheck, CheckCircle2, ExternalLink, Mail, MapPin, MessageCircle, ShieldCheck, Sparkles, Wrench } from "lucide-react";
 import { BookingWizard } from "@/components/BookingWizard";
 import { PricingCard } from "@/components/PricingCard";
 import { packages } from "@/lib/booking";
@@ -20,7 +20,6 @@ const serviceAreas = [
 ];
 
 const hiddenFormFields = [
-  "form-name",
   "bot-field",
   "vehicleSize",
   "selectedPackage",
@@ -35,6 +34,26 @@ const hiddenFormFields = [
   "payload"
 ];
 
+const facebookPageUrl = "https://www.facebook.com/profile.php?id=61590367313594";
+
+const detailPhotos = [
+  {
+    src: "/detailing-foam-closeup.jpg",
+    title: "Foam wash finish",
+    copy: "Gloss-focused exterior work with attention to panels, trim, and tight body lines."
+  },
+  {
+    src: "/detailing-driveway-foam.jpg",
+    title: "Driveway-ready setup",
+    copy: "Mobile service built around the customer’s home or workplace, with water and outlet access confirmed upfront."
+  },
+  {
+    src: "/detailing-red-spray.jpg",
+    title: "High-pressure rinse",
+    copy: "A sharper visual standard for maintenance washes, deep cleans, and resale presentation."
+  }
+];
+
 export default function Home() {
   return (
     <>
@@ -45,6 +64,7 @@ export default function Home() {
         netlify-honeypot="bot-field"
         hidden
       >
+        <input type="hidden" name="form-name" value="booking-wizard" />
         {hiddenFormFields.map((field) => (
           <input key={field} type="hidden" name={field} />
         ))}
@@ -54,8 +74,8 @@ export default function Home() {
         <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/88 backdrop-blur-xl">
           <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
             <a href="#top" className="flex min-w-0 items-center gap-3">
-              <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-xl border border-cyan-300/35 bg-slate-950 shadow-glow">
-                <Image src="/st-logo.png" alt="ST Chicagoland Mobile Detailing logo" width={56} height={56} className="h-full w-full object-cover" priority />
+              <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-xl border border-cyan-300/35 bg-slate-950 p-1 shadow-glow">
+                <Image src="/st-logo.png" alt="ST Chicagoland Mobile Detailing logo" width={56} height={56} className="h-full w-full object-contain" priority />
               </span>
               <span className="min-w-0">
                 <span className="block truncate text-base font-black tracking-tight sm:text-xl">ST CHICAGOLAND</span>
@@ -102,7 +122,7 @@ export default function Home() {
         <main id="top">
           <section className="relative isolate min-h-[94svh] overflow-hidden pt-32 md:pt-24">
             <Image
-              src="https://images.unsplash.com/photo-1603386329225-868f9b1ee6c9?auto=format&fit=crop&w=2400&q=80"
+              src="/detailing-driveway-foam.jpg"
               alt=""
               fill
               sizes="100vw"
@@ -180,6 +200,36 @@ export default function Home() {
                     <item.icon className="h-9 w-9 text-cyan-300" aria-hidden="true" />
                     <h2 className="mt-6 text-2xl font-black text-white">{item.title}</h2>
                     <p className="mt-3 text-zinc-300">{item.copy}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="bg-slate-950 py-16 sm:py-24">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+                <div>
+                  <p className="text-sm font-black uppercase tracking-[0.22em] text-cyan-300">Visual standard</p>
+                  <h2 className="mt-4 max-w-2xl text-4xl font-black tracking-tight text-white sm:text-5xl">
+                    A real-world detailing look, not a generic car wash template.
+                  </h2>
+                </div>
+                <p className="max-w-md text-zinc-300">
+                  The page now uses darker, detail-focused vehicle photography to match the premium mobile service positioning.
+                </p>
+              </div>
+
+              <div className="mt-10 grid gap-5 md:grid-cols-3">
+                {detailPhotos.map((photo) => (
+                  <article key={photo.title} className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] shadow-glass">
+                    <div className="relative aspect-[4/3]">
+                      <Image src={photo.src} alt="" fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover" />
+                    </div>
+                    <div className="p-5">
+                      <h3 className="text-xl font-black text-white">{photo.title}</h3>
+                      <p className="mt-2 text-sm text-zinc-300">{photo.copy}</p>
+                    </div>
                   </article>
                 ))}
               </div>
@@ -325,6 +375,16 @@ export default function Home() {
                     info.stdetailingchicago@gmail.com
                   </a>
                 </div>
+                <a
+                  href={facebookPageUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 font-black text-white transition hover:border-cyan-300/45 hover:bg-white/[0.08]"
+                >
+                  <MessageCircle className="h-5 w-5 text-cyan-300" aria-hidden="true" />
+                  Facebook Page
+                  <ExternalLink className="h-4 w-4 text-zinc-400" aria-hidden="true" />
+                </a>
               </div>
               <a
                 href="#quote"

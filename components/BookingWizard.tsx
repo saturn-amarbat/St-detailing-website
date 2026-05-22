@@ -250,9 +250,19 @@ export function BookingWizard() {
 
         <form
           name={formName}
+          method="POST"
+          action="/"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
           onSubmit={handleSubmit(onSubmit)}
           className="rounded-2xl border border-white/10 bg-white/[0.045] p-4 shadow-glass backdrop-blur sm:p-6"
         >
+          <input type="hidden" name="form-name" value={formName} />
+          <p className="hidden">
+            <label>
+              Do not fill this out: <input name="bot-field" />
+            </label>
+          </p>
           <input type="hidden" {...register("vehicleSize")} />
           <input type="hidden" {...register("selectedPackage")} />
           <input type="hidden" {...register("calculatedTotal", { valueAsNumber: true })} />
