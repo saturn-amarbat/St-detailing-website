@@ -20,6 +20,7 @@ import {
 import { businessEmail, messengerUrl } from "@/lib/contact";
 
 const formName = "booking-wizard";
+const netlifyFormsEndpoint = "/forms.html";
 
 const stepFields: Record<number, (keyof BookingFormValues)[]> = {
   0: ["vehicleSize"],
@@ -226,7 +227,7 @@ export function BookingWizard() {
     setSubmitError("");
 
     try {
-      const response = await fetch("/", {
+      const response = await fetch(netlifyFormsEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encodeNetlifyForm({
@@ -247,15 +248,16 @@ export function BookingWizard() {
       });
 
       if (!response.ok) {
-        throw new Error("The request could not be submitted.");
+        throw new Error(`Form submission failed with status ${response.status}.`);
       }
 
       setStatus("success");
       reset(getDefaultValues());
       setStep(0);
-    } catch {
+    } catch (error) {
+      console.error(error);
       setStatus("error");
-      setSubmitError("Something went wrong while submitting your request.");
+      setSubmitError("The quote form could not connect. Please use Messenger or email and we will still receive your request.");
     }
   };
 
