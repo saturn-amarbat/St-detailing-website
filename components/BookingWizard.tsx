@@ -233,6 +233,7 @@ export function BookingWizard() {
         body: encodeNetlifyForm({
           "form-name": formName,
           "bot-field": "",
+          subject: `New quote request: ${selectedService.name} - $${calculatedTotal}`,
           vehicleSize: selectedVehicle.label,
           selectedPackage: selectedService.name,
           addons: JSON.stringify(payload.addons),

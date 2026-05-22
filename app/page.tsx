@@ -24,6 +24,7 @@ const serviceAreas = [
 
 const hiddenFormFields = [
   "bot-field",
+  "subject",
   "vehicleSize",
   "selectedPackage",
   "addons",
